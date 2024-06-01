@@ -1,0 +1,16 @@
+syntax = "proto3";
+
+package lamport;
+
+service LamportService {
+    rpc ResolveEvent(EventRequest) returns (EventResponse);
+}
+
+message EventRequest {
+    int32 logical_clock = 1;
+    string message = 2;
+}
+
+message EventResponse {
+    int32 logical_clock = 1;
+}
