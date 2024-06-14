@@ -1,0 +1,31 @@
+services:
+  rabbitmq:
+    image: rabbitmq:3-management-alpine
+    container_name: 'rabbitmq'
+    ports:
+        - 5672:5672
+        - 15672:15672
+    volumes:
+        - ~/.docker-conf/rabbitmq/data/:/var/lib/rabbitmq/
+        - ~/.docker-conf/rabbitmq/log/:/var/log/rabbitmq
+    networks:
+        - distributed-net
+    healthcheck:
+      test: rabbitmq-diagnostics -q ping
+      interval: 30s
+      timeout: 30s
+      retries: 3
+
+  lock-manager:
+    build: ./lockManager
+    container_name: 'lock-manager'
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
+    networks:
+      - distributed-net
+
+networks:
+  distributed-net:
+    external: false
+    name: distributed-net
