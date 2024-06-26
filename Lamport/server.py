@@ -2,6 +2,12 @@ from concurrent import futures
 import grpc
 import lamport_pb2
 import lamport_pb2_grpc
+from argparse import ArgumentParser
+import threading
+import time
+import random
+
+process = None
 
 class LamportProcess(lamport_pb2_grpc.LamportServiceServicer):
     def __init__(self, frequency, address):
@@ -34,10 +40,30 @@ class LamportProcess(lamport_pb2_grpc.LamportServiceServicer):
         print(f"Sent message: {message} with logical clock {self.logical_clock} to address {address}")
         print(f"Updated logical clock after response: {self.logical_clock}")
 
-def serve(frequency, address):
+def serve(address, frequency):
+    global process
     server = grpc.server(futures.ThreadPoolExecutor(max_workers=10))
     process = LamportProcess(frequency, address)
     lamport_pb2_grpc.add_LamportServiceServicer_to_server(process, server)
     server.add_insecure_port('[::]:{}'.format(address))
     server.start()
-    return process
+    server.wait_for_termination()
+
+if __name__ == '__main__':
+    parser = ArgumentParser()
+    parser.add_argument('-f', '--frequency')
+    parser.add_argument('-a', '--address')
+    args = parser.parse_args()
+    grpc_thread = threading.Thread(target=serve, args=(int(args.address), int(args.frequency)))
+    grpc_thread.start()
+    requestTime = int(random.random()*30) + 5
+    while True:
+        time.sleep(requestTime)
+        if(process is not None):
+            serverToSendMessage = [50051, 50052, 50053, 50054, 50055]
+            serverToSendMessage.remove(int(args.address))
+            serverToSendMessage = random.choice(serverToSendMessage)
+            try:
+                process.SendMessage('Event', '[::]:{}'.format(serverToSendMessage))
+            except:
+                print("Error sending message")
