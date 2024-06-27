@@ -56,22 +56,26 @@ if __name__ == '__main__':
     parser = ArgumentParser()
     parser.add_argument('-f', '--frequency')
     parser.add_argument('-a', '--address')
+    parser.add_argument('-i', '--actual_ip')
     args = parser.parse_args()
 
     vm_ips = [
-        "10.158.0.2",
-        "10.158.0.3"
+        "10.158.0.6",
+        "10.158.0.5"
     ]
 
-    grpc_port = 50051
-
     # Monta a lista de endereços completos com IP e porta
-    servers = [f"{ip}:{grpc_port}" for ip in vm_ips]
+    servers = [f"{ip}:{args.address}" for ip in vm_ips]
+
+    print(servers)
 
     # Remove o próprio endereço da lista de servidores
-    current_server = f"{args.address}:{grpc_port}"
+    current_server = f"{args.actual_ip}:{args.address}"
+    print(current_server)
 
     servers = [server for server in servers if server != current_server]
+
+    print(servers)
 
     print("main starter")
     grpc_thread = threading.Thread(target=serve, args=(int(args.address), int(args.frequency)))
