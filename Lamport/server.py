@@ -42,9 +42,7 @@ class LamportProcess(lamport_pb2_grpc.LamportServiceServicer):
 
 def serve(address, frequency):
     global process
-    print("here one")
     server = grpc.server(futures.ThreadPoolExecutor(max_workers=10))
-    print("here two")
     process = LamportProcess(frequency, address)
     lamport_pb2_grpc.add_LamportServiceServicer_to_server(process, server)
     server.add_insecure_port('[::]:{}'.format(address))
@@ -77,7 +75,7 @@ if __name__ == '__main__':
 
     print(servers)
 
-    print("main starter")
+    print("main started")
     grpc_thread = threading.Thread(target=serve, args=(int(args.address), int(args.frequency)))
     grpc_thread.start()
     requestTime = int(random.random()*30) + 5
@@ -88,5 +86,5 @@ if __name__ == '__main__':
             try:
                 print(serverToSendMessage)
                 process.SendMessage('Event', serverToSendMessage)
-            except Exception as e:
-                print("Error sending message: %s", e)
+            except Exception:
+                print("Error sending message")
