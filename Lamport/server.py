@@ -66,17 +66,11 @@ if __name__ == '__main__':
     # Monta a lista de endereços completos com IP e porta
     servers = [f"{ip}:{args.address}" for ip in vm_ips]
 
-    print(servers)
-
     # Remove o próprio endereço da lista de servidores
     current_server = f"{args.actual_ip}:{args.address}"
-    print(current_server)
 
     servers = [server for server in servers if server != current_server]
 
-    print(servers)
-
-    print("main started")
     grpc_thread = threading.Thread(target=serve, args=(int(args.address), int(args.frequency)))
     grpc_thread.start()
     requestTime = int(random.random()*30) + 5
