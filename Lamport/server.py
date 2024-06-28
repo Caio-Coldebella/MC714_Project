@@ -59,7 +59,8 @@ if __name__ == '__main__':
 
     vm_ips = [
         "10.158.0.6",
-        "10.158.0.5"
+        "10.158.0.5",
+        "10.158.0.7"
     ]
 
     # Monta a lista de endereços completos com IP e porta
@@ -87,4 +88,4 @@ if __name__ == '__main__':
                 print(serverToSendMessage)
                 process.SendMessage('Event', serverToSendMessage)
             except Exception:
-                print("Error sending message")
+                pass
