@@ -9,7 +9,7 @@ class lock_manager():
         self.start()
 
     def start(self):
-        self.channel.basic_consume(queue='lock_queue', on_message_callback=self.on_request, auto_ack=True)
+        self.channel.basic_consume(queue='lock_queue', on_message_callback=self.on_request, auto_ack=False)
         print("Lock manager started")
         self.channel.start_consuming()
 
@@ -25,6 +25,7 @@ class lock_manager():
                     properties=pika.BasicProperties(correlation_id=props.correlation_id),
                     body='lock_granted'
                 )
+                ch.basic_ack(delivery_tag=method.delivery_tag)
             else:
                 print("Lock denied")
                 ch.basic_nack(delivery_tag=method.delivery_tag, requeue=True)
@@ -37,7 +38,12 @@ class lock_manager():
                 properties=pika.BasicProperties(correlation_id=props.correlation_id),
                 body='lock_released'
             )
+            ch.basic_ack(delivery_tag=method.delivery_tag)
             self.current_lock_holder = None
+            method_frame, header_frame, body = self.channel.basic_get(queue='lock_queue', auto_ack=True)
+            if body is not None:
+                self.on_request(ch, method_frame, header_frame, body)
+
 
 if __name__ == "__main__":
     manager = lock_manager()

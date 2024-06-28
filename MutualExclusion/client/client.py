@@ -17,6 +17,7 @@ class DistributedLock:
             self.response = body
 
     def acquire_lock(self):
+        self.response = None
         if(self.callback_queue is None):
             self.callback_queue = self.channel.queue_declare(queue='lock_queue').method.queue
         self.channel.basic_consume(queue=self.callback_queue, on_message_callback=self.on_response, auto_ack=True)
@@ -31,6 +32,7 @@ class DistributedLock:
         return self.response.decode('utf-8') == 'lock_granted'
 
     def release_lock(self):
+        self.response = None
         if(self.callback_queue is None):
             self.callback_queue = self.channel.queue_declare(queue='lock_queue').method.queue
         self.channel.basic_consume(queue=self.callback_queue, on_message_callback=self.on_response, auto_ack=True)
