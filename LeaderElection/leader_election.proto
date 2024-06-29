@@ -6,7 +6,7 @@ service Election {
 }
 
 message ElectionRequest {
-  int32 node_id = 1;
+  string node_ip = 1;
 }
 
 message ElectionResponse {
@@ -14,7 +14,7 @@ message ElectionResponse {
 }
 
 message LeaderRequest {
-  int32 leader_id = 1;
+  string leader_ip = 1;
 }
 
 message LeaderResponse {

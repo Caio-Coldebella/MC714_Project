@@ -14,7 +14,7 @@ _sym_db = _symbol_database.Default()
 
 
 
-DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x15leader_election.proto\"\"\n\x0f\x45lectionRequest\x12\x0f\n\x07node_id\x18\x01 \x01(\x05\"\x1e\n\x10\x45lectionResponse\x12\n\n\x02ok\x18\x01 \x01(\x08\"\"\n\rLeaderRequest\x12\x11\n\tleader_id\x18\x01 \x01(\x05\"\x1c\n\x0eLeaderResponse\x12\n\n\x02ok\x18\x01 \x01(\x08\x32k\n\x08\x45lection\x12,\n\x05\x45lect\x12\x10.ElectionRequest\x1a\x11.ElectionResponse\x12\x31\n\x0e\x41nnounceLeader\x12\x0e.LeaderRequest\x1a\x0f.LeaderResponseb\x06proto3')
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x15leader_election.proto\"\"\n\x0f\x45lectionRequest\x12\x0f\n\x07node_ip\x18\x01 \x01(\t\"\x1e\n\x10\x45lectionResponse\x12\n\n\x02ok\x18\x01 \x01(\x08\"\"\n\rLeaderRequest\x12\x11\n\tleader_ip\x18\x01 \x01(\t\"\x1c\n\x0eLeaderResponse\x12\n\n\x02ok\x18\x01 \x01(\x08\x32k\n\x08\x45lection\x12,\n\x05\x45lect\x12\x10.ElectionRequest\x1a\x11.ElectionResponse\x12\x31\n\x0e\x41nnounceLeader\x12\x0e.LeaderRequest\x1a\x0f.LeaderResponseb\x06proto3')
 
 
 
