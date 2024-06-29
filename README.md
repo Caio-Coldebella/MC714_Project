@@ -1,1 +1,16 @@
-readme file
+# MC714 - project
+
+## Dependências 
+Para todos os algoritmo temos um arquivo requirements.txt. Para baixar e instalar as dependências necessárias para rodar o projeto localmente rode o comando *pip install -r requirements.txt*
+
+## Como rodar cara servidor:
+### LeaderElection:
+Nesse pacote temos dois arquivos que sobem servidores, o server.py e o server_test.py.
+
+**server_test.py**: Ele sobe um servidor no localhost apenas alterando a porta dado o comando de execução.
+Para executar basta executar *python3 server.py 1*
+Para ver o funcionamento da eleição de lider basta subir outros servidores locais em outras portas, ou seja, abrindo outros terminais e rodando *python3 server.py 2* e *python3 server.py 3*.
+Com isso vc consegue ver os logs mostrando todos os processos. É possível matar um servidor para ver novas eleições e que novos líderes sejam eleitos.
+
+**serve.py**: Esse foi o programa usado na apresentação do trabalho, pois nele já contêm os ips das máquinas virtuais que subimos na GCP. 
+As três máquinas tinham esse projeto clonado com as dependências já instaladas.
