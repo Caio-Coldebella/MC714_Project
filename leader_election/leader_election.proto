@@ -1,0 +1,22 @@
+syntax = "proto3";
+
+service Election {
+  rpc Elect(ElectionRequest) returns (ElectionResponse);
+  rpc AnnounceLeader(LeaderRequest) returns (LeaderResponse);
+}
+
+message ElectionRequest {
+  int32 node_id = 1;
+}
+
+message ElectionResponse {
+  bool ok = 1;
+}
+
+message LeaderRequest {
+  int32 leader_id = 1;
+}
+
+message LeaderResponse {
+  bool ok = 1;
+}
