@@ -45,41 +45,34 @@ def serve(address, frequency):
     server = grpc.server(futures.ThreadPoolExecutor(max_workers=10))
     process = LamportProcess(frequency, address)
     lamport_pb2_grpc.add_LamportServiceServicer_to_server(process, server)
-    server.add_insecure_port('[::]:{}'.format(address))
+    server.add_insecure_port(f'[::]:{address}')
     server.start()
     server.wait_for_termination()
 
 
 if __name__ == '__main__':
     parser = ArgumentParser()
-    parser.add_argument('-f', '--frequency')
-    parser.add_argument('-a', '--address')
-    parser.add_argument('-i', '--actual_ip')
+    parser.add_argument('-f', '--frequency', type=int)
+    parser.add_argument('-a', '--address', type=int)
     args = parser.parse_args()
 
-    vm_ips = [
-        "10.158.0.6",
-        "10.158.0.5",
-        "10.158.0.7"
-    ]
+    # Lista de portas para os servidores locais
+    ports = [50051, 50052, 50053]
 
-    # Monta a lista de endereços completos com IP e porta
-    servers = [f"{ip}:{args.address}" for ip in vm_ips]
+    # Remover a porta atual da lista de servidores
+    current_port = args.address
+    servers = [f"localhost:{port}" for port in ports if port != current_port]
 
-    # Remove o próprio endereço da lista de servidores
-    current_server = f"{args.actual_ip}:{args.address}"
-
-    servers = [server for server in servers if server != current_server]
-
-    grpc_thread = threading.Thread(target=serve, args=(int(args.address), int(args.frequency)))
+    grpc_thread = threading.Thread(target=serve, args=(current_port, args.frequency))
     grpc_thread.start()
-    requestTime = int(random.random()*30) + 5
+
+    request_time = int(random.random() * 30) + 5
     while True:
-        time.sleep(requestTime)
+        time.sleep(request_time)
         if process is not None:
-            serverToSendMessage = random.choice(servers)
+            server_to_send_message = random.choice(servers)
             try:
-                print(serverToSendMessage)
-                process.SendMessage('Event', serverToSendMessage)
-            except Exception:
-                pass
+                print(f"Sending message to {server_to_send_message}")
+                process.SendMessage('Event', server_to_send_message)
+            except Exception as e:
+                print(f"Failed to send message to {server_to_send_message}: {e}")
