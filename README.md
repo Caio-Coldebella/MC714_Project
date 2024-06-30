@@ -4,6 +4,8 @@
 * Caio Ruiz Coldebella 232621
 * Vinícius Lublanski 245365
 
+# Vídeo com apresentação no [youtube trabalho2](https://www.youtube.com/watch?v=T_VUvHIHDOU)
+
 # Relógio Lógico de Lamport
 
 Os arquivos *server.py* e *server_test.py* foram iniciados em VMs do GCP.
