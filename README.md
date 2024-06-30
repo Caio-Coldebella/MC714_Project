@@ -1,15 +1,15 @@
-# MC714 - project
+# MC714 - 2° Trabalho
 
-## Dependências 
-Para todos os algoritmo temos um arquivo requirements.txt. Para baixar e instalar as dependências necessárias para rodar o projeto localmente rode o comando *pip install -r requirements.txt*
+## Instalação das Dependências 
+Para todos os algoritmos, há um arquivo requirements.txt. Para baixar e instalar as dependências necessárias para rodar o projeto localmente execute o comando *pip install -r requirements.txt*
 
-## Como rodar cara servidor:
-### LeaderElection:
-Nesse pacote temos dois arquivos que sobem servidores, o server.py e o server_test.py.
+# Algoritmo de Eleição de Líder:
 
-**server_test.py**: Ele sobe um servidor no localhost apenas alterando a porta dado o comando de execução.
+Os arquivos *server_test.py* e *serve.py* foram iniciados em VMs do GCP.
+
+**server_test.py**: Arquivo que inicia um servidor no localhost, alterando a porta quando dado um o comando de execução.
 Para executar basta rodar *python3 server_test.py 1*
-Para ver o funcionamento da eleição de lider basta subir outros servidores locais em outras portas:
+Para ver o funcionamento da eleição de lider basta iniciar outros servidores locais em outras portas:
 
 *python3 server.py 1*
 
@@ -17,15 +17,17 @@ Para ver o funcionamento da eleição de lider basta subir outros servidores loc
 
 *python3 server.py 3*
 
-**serve.py**: Esse foi o programa usado na apresentação do trabalho, pois nele já contêm os ips das máquinas virtuais que subimos na GCP. 
-As três máquinas tinham esse projeto clonado com as dependências já instaladas.
+**serve.py**: Este programa foi utilizado na apresentação do trabalho, e contêm os IPs das VMs que foram iniciadas no GCP. 
+As três máquinas foram executadas com este projeto clonado com as dependências já instaladas.
 
-### Lamport
-Nesse pacote temos dois arquivos que sobem servidores, o server.py e o server_test.py.
+# Relógio Lógico de Lamport
 
-**server_test.py**: Ele sobe um servidor no localhost apenas alterando a porta dado o comando de execução.
+Os arquivos *server.py* e *server_test.py* foram iniciados em VMs do GCP.
+
+**server_test.py**: Arquivo que inicia um servidor no localhost, alterando a porta quando dado o comando de execução.
 Para executar basta rodar *python3 server_test.py --frequency=2 --address=50051*.
-Para ver o funcionamento basta subir outros servidores em outras portas e se quiser com frequencias diferentes.
+Para ver o funcionamento basta iniciar outros servidores em outras portas, opcionalmente com frequências de clock diferentes,
+afim de ser possível observar a dessincronização dos relógios em diferentes servidores.
 
 *python3 server_test.py --frequency=2 --address=50051*
 
@@ -33,8 +35,31 @@ Para ver o funcionamento basta subir outros servidores em outras portas e se qui
 
 *python3 server_test.py --frequency=2 --address=50053*
 
-**serve.py**: Esse foi o programa usado na apresentação do trabalho, pois nele já contêm os ips das máquinas virtuais que subimos na GCP. 
-As três máquinas tinham esse projeto clonado com as dependências já instaladas.
+**serve.py**: Este foi o programa utilizado na apresentação do trabalho, pois nele já estão contidos os IPs das VMs que foram iniciadas no GCP. 
+As três máquinas foram executadas com este projeto clonado com as dependências já instaladas.
 
-### MutualExclusion
+# Algoritmo de Exclusão Mútua
 
+## Descrição
+
+A implementação do algoritmo de exclusão mútua foi realizada utilizando containeres Docker, com um container sendo o Lock Manager,
+o qual detêm o controle do lock, e containeres clientes, que pedem acesso ao lock e utilizam o recurso por um determinado tempo.
+Os clientes pedem acesso ao recurso repetidamente a cada X segundos, definido de forma aleatória. A comunicação entre os clientes
+e o Lock Manager foi feita através do RabbitMQ, e foi utilizado [Direct Exchange](https://www.rabbitmq.com/tutorials/tutorial-four-python)
+para gerenciar os canais das mensagens dos clientes e do manager separadamente, de forma que cada consumidor tivesse acesso apenas às mensagens
+endereçadas à este. Quando o Lock Manager não pode liberar o lock para um cliente, o cliente entra em um estado de espera e o Lock Manager
+adiciona a requisição novamente à fila.
+
+## Execução do Programa
+
+Inicie o container do Lock Manager a partir do arquivo *docker-compose.yml*
+
+```
+sudo docker compose up
+```
+
+Após a criação do container, será mostrada a mensagem *Lock manager started*, em seguida inicie os clientes a partir do script *run.bash*
+
+```
+sudo bash run.bash
+```
