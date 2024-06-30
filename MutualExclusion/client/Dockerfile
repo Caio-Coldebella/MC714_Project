@@ -1,5 +1,8 @@
 FROM python:3.9-slim
 
+ARG ID
+ENV ID=$ID
+
 WORKDIR /app
 
 COPY client/requirements.txt .
@@ -9,4 +12,5 @@ COPY client/client.py .
 
 ENV PYTHONUNBUFFERED=1
 
-CMD ["python", "./client.py"]
+ENV RUNCOMMAND="python3 client.py --id=${ID}"
+ENTRYPOINT $RUNCOMMAND
